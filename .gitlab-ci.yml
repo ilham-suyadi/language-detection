@@ -1,0 +1,26 @@
+variables:
+  GIT_STRATEGY: clone
+
+# include:
+#   - template: Code-Quality.gitlab-ci.yml
+#   - template: Security/Secret-Detection.gitlab-ci.yml
+#   - template: Security/SAST.gitlab-ci.yml
+#   - template: Container-Scanning.gitlab-ci.yml
+
+stages:
+  - build
+  # - test
+
+
+build:
+  stage: build
+  tags: 
+    - shell
+  script:
+    - IMAGE_TAG=$([ "$CI_COMMIT_REF_NAME" = "main" ] && echo "latest" || echo "$CI_COMMIT_REF_NAME")
+    - docker build -t $DOCKER_REGISTRY:$IMAGE_TAG .
+    - docker push $DOCKER_REGISTRY:$IMAGE_TAG
+
+container_scanning:
+  variables:
+    CS_IMAGE: $DOCKER_REGISTRY:$IMAGE_TAG

@@ -4,7 +4,7 @@ import re
 from flask_cors import CORS
 
 # Load model, vectorizer, and label encoder
-with open("model_and_label.pkl", "rb") as f:
+with open("/app/model.pkl", "rb") as f:
     loaded_data = pickle.load(f)
 
 model = loaded_data['model']
